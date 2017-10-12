@@ -3,10 +3,10 @@ import numpy as np
 from neurons.activations import get_activation
 
 
-class Perceptron:
-    def __init__(self, inputs, weights_range, activation):
-        self.inputs = inputs
-        self.weights = np.random.uniform(*weights_range, inputs)
+class Neuron:
+    def __init__(self, number_of_inputs, weights_range, activation):
+        self.number_of_inputs = number_of_inputs
+        self.weights = np.random.uniform(*weights_range, number_of_inputs)
         self.bias = 1
         self.activation = get_activation(activation)
 
@@ -15,6 +15,10 @@ class Perceptron:
 
     def raw_output(self, features):
         features_weights_product = self.bias
-        for i in range(self.inputs):
+        for i in range(self.number_of_inputs):
             features_weights_product += self.weights[i] * features[i]
         return features_weights_product
+
+    @property
+    def get_number_of_inputs(self):
+        return self.number_of_inputs

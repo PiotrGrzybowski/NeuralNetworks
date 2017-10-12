@@ -32,11 +32,77 @@
 		\item Stałej zwanej "biasem". Liczba rzeczywista.
 		\item Funkcji aktywacji, według której obliczana jest wartość wyjścia neuronów w sieci neuronowej.
 	\end{itemize}
-    Wartość wyjścia neuronu jest liczona w sposób następujący (\textit{g} -> funkcja aktywacji)
+    Wartość wyjścia neuronu jest liczona w sposób następujący (\textit{g} - funkcja aktywacji)
     \begin{equation}
-    		Output = g(\Sigma_{i=1}^{N} x_i*w_i + b)
+    		Output = g(x^Tw + b)
     \end{equation}
     
-
+    Podczas rozwiązywania zadania zostaną zbadane dwa typy neuronów. Perceptron prosty oraz komórka Adaline. Ich struktura jest taka sama, jednakże różnią się procedurą uczenia. Sposoby te omówione zostaną poniżej.
+    
+    \newpage
+    \subsection{Uczenie perceptronu prostego}
+    Uczenie sieci realizowane jest poprzez aktualizację wag perceptronu dla każdego przypadku treningowego w każdej kolejnej iteracji uczenia. 
+    \begin{equation}
+    w_i^{t+1} = w_i^t + \mu * \delta * x_i
+    \end{equation}
+    gdzie:
+    \begin{itemize}
+        \item $w_i^{t+1}$ wartość \textit{i-tej} wagi w czasie $t+1$.
+        \item $w_i^t$ - aktualna wartość $w_i$.
+        \item $\mu$ - stała uczenia.
+        \item $x_i$ - wartość i-teg wygnału wejściowego.
+    \end{itemize}
+    
+    W przypadku perceptronu prostego błąd $\delta$ definiuje się jako różnicę między wartością oczekiwaną a wartością funkcji aktywacji perceptronu:
+    \begin{equation}
+    \delta = E - P
+    \end{equation}
+    gdzie:
+    \begin{itemize}
+    	\item E - wartość oczekiwana,
+    	\item P - wartość predykowana
+    \end{itemize}
+    Ostatecznie procedura aktualizacji wag w każdym kroku będzie wyglądać następująco:
+     \begin{equation}
+        w_i^{t+1} = w_i^t + \mu * (E-P) * x_i
+     \end{equation}
+    
+    \subsection{Uczenie komórki Adaline}
+    Uczenie sieci realizowane jest poprzez aktualizację wag perceptronu dla każdego przypadku treningowego w każdej kolejnej iteracji uczenia w podobny sposób jak dla perceptronu prostego. Jednakże zamiast błędu dyskretnego $\delta$ będzie brany gradient błędu średniokwadratowego.
+    \begin{equation}
+    w_i^{t+1} = w_i^t + \mu * \nabla_{w_i} \delta * x_i
+    \end{equation}
+    gdzie:
+    \begin{itemize}
+        \item $w_i^{t+1}$ wartość \textit{i-tej} wagi w czasie $t+1$.
+        \item $w_i^t$ - aktualna wartość $w_i$.
+        \item $\mu$ - stała uczenia.
+        \item $x_i$ - wartość i-teg wygnału wejściowego.
+    \end{itemize}
+    Różnicą będzie w postaci funkcji błędu. Skorzystamy tutaj z błędu średniokwadratowego. Wartością błędu będzie różnica wartości oczekiwanej oraz wartości pobudzenia neuronu. W przypadku perceptronu prostego do wyliczenia błędu aplikowana jeszcze była funkcja aktywacji do pobudzenia.
+    \begin{equation}
+    \delta_i = d_i - x^Tw 
+    \end{equation}
+    
+    \begin{equation}
+     \delta_i^2 = (E_i - \Sigma_{i=1}^{N} x_i*w_i )^2 
+     \end{equation}
+     
+     \begin{equation}
+     \frac{\partial \delta_i^2}{\partial w_i} = 2 * \delta_i * \frac{\partial \delta_i}{\partial w_i}
+     \end{equation}
+    gdzie:
+    \begin{itemize}
+    	\item E - wartość oczekiwana,
+    	\item P - wartość predykowana
+    \end{itemize}
+    
+	\newpage
+	\section{Zbiór danych}
+	Do przygotowania zbioru danych został napisany generator, żeby w prosty sposób móc otrzymać zadaną liczbę przykładów w zbiorze. Zbiór generuje się w zależności od liczby przypadków oraz odchylenia epsilon. Odchylenie posłuży nam do zamodelowania logiki rozmytej. Przykładowo dla $\epsilon = 0.1$ i dla funkcji logicznej AND, pozytywne sygnały wejściowe przyjmą wartości z zakresu [0.9, 1] a negatywne z zakresu [0, 0.1].
+	
+	\section{Badania}
+	Wyniki uczenia i jakości predykcji neuronów przy różnych parametrach o różnej wielkości zbioru danych.
+	\subsection{Perceptron prosty}
 \end{document}
 
