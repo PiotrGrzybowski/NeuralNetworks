@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{blindtext}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+ \usepackage{geometry} 
+\newgeometry{tmargin=3cm, bmargin=3cm, lmargin=3cm, rmargin=3cm}
+
+\title{Perceptron prosty oraz Adaline}
+\date{11 październik 2017}
+\author{Piotr Grzybowski}
+ 
+\begin{document}
+ 
+\maketitle
+\newpage
+
+\section{Opis problemu}
+    Symulowanie działania bramek logicznych realizujących proste funkcje logiczne przy pomocy modeli matematycznych jako problem klasyfikacji binarnej.\\[0.3cm]
+	Celem klasyfikacji binarnej jest \textit{zaklasyfikowanie}, czyli przypisanie każdego elementu z danego zbioru do dwóch rozłącznych kategorii. \\[0.3cm]     
+	Rozważmy bramki logiczne, które mają dwa wejścia i jedno wyjście. Taka bramka działa jak klasyfikator binarny. Parze sygnałów wejściowych zostaje przypisana wartość zero lub jeden. (Przypisanie pary wejść do jednej z dwóch możliwych kategorii.)\\[0.3cm]
+    W klasycznych bramkach logicznych wejścia jak i wartość realizowanej funkcji przyjmuje dyskretne wartości: zero lub jeden. Naszym zadaniem będzie zbudowanie, oraz wyuczenie modelu, który będzie poprawnie odzwierciedlał działanie funkcji także w przypadku gdy na wejściu pojawią się wartości ciągłe z pewnym odchyleniem $\epsilon$. Przykład działania bramki logicznej \textit{AND} przy $\epsilon = 0.05$. (0.95 \textit{AND} 0.05) = 0. \\[0.3cm]
+    Zbiór danych za pomocą którego odbędzie się uczenie sieci neuronowej składać się będzie z uporządkowanych trójek $(x_1, x_2, y)$, gdzie $x_1, x_2$ to wartości sygnałów wejściowych do bramek logicznych, oraz $y$ jako wartość konkretnej funkcji logicznej dla podanych wejść. (Klasa do której możemy przypisać daną parę sygnałów wejściowych.)
+    
+    
+\section{Proponowane rozwiązanie}
+	Powyżej zaprezentowany problem zostanie rozwiązany przy użyciu prostej sieci neuronowej jako klasyfikatora binarnego. A dokładniej tylko pojedynczego neuronu w dwóch wersjach: pojedynczy perceptron prosty, oraz pojedyncza komórka Adaline.
+	
+	\subsection{Sieć neuronowa}
+	Każdy z neuronów składa się z: 
+	\begin{itemize}
+		\item Wektora wag o długości liczbie sygnałów wejściowych. Każdemu sygnałowi wejściowemu $x_i$, odpowiada dokładnie jedna kolejna waga $w_i$. Symbolicznie $W = [x_1, ..., x_N]$, gdzie N to liczba sygnałów wejściowych do neuronu.
+		\item Stałej zwanej "biasem". Liczba rzeczywista.
+		\item Funkcji aktywacji, według której obliczana jest wartość wyjścia neuronów w sieci neuronowej.
+	\end{itemize}
+    Wartość wyjścia neuronu jest liczona w sposób następujący (\textit{g} -> funkcja aktywacji)
+    \begin{equation}
+    		Output = g(\Sigma_{i=1}^{N} x_i*w_i + b)
+    \end{equation}
+    
+
+\end{document}
+
