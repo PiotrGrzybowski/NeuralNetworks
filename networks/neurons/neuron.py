@@ -4,10 +4,10 @@ from neurons.activations import get_activation
 
 
 class Neuron:
-    def __init__(self, number_of_inputs, weights_range, activation):
+    def __init__(self, number_of_inputs, weights_range, bias, activation):
         self.number_of_inputs = number_of_inputs
         self.weights = np.random.uniform(*weights_range, number_of_inputs)
-        self.bias = 1
+        self.bias = bias
         self.activation = get_activation(activation)
 
     def predict(self, features):
@@ -22,3 +22,7 @@ class Neuron:
     @property
     def get_number_of_inputs(self):
         return self.number_of_inputs
+
+    @property
+    def get_activation(self):
+        return self.activation

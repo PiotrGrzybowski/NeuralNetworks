@@ -15,28 +15,11 @@ epsilon = 0.1
 high_range = (1 - epsilon, 1)
 
 # low_range, low_output_value, loss_type, outputs_pattern = (0, epsilon), 0, 'unipolar', AND_UNIPOLAR_PATTERN
-low_range, low_output_value, activation, outputs_pattern = (-1, -1 + epsilon), -1, 'bipolar', OR_BIPOLAR_PATTERN
+low_range, low_output_value, activation, outputs_pattern = (-1, -1 + epsilon), -1, 'bipolar', AND_BIPOLAR_PATTERN
 
-perceptron = Neuron(2, (-0.1, 0.5), activation)
+perceptron = Neuron(2, (-0.1, 0.5), 1, activation)
 
-
-def build_data_config(samples, high_range, low_range, outputs):
-    return [[samples, high_range, high_range, outputs[0]],
-            [samples, high_range, low_range, outputs[1]],
-            [samples, low_range, high_range, outputs[2]],
-            [samples, low_range, low_range, outputs[3]]]
-
-
-def build_data_set(config):
-    data = []
-    for cfg in config:
-        data.append(LogicalFunctionsGenerator.generate_logical_function(*cfg))
-
-    return np.asarray(data).reshape((samples * len(training_data_config), 3))
-
-
-training_data_config = build_data_config(samples, high_range, low_range, outputs_pattern)
-data = build_data_set(training_data_config)
+data = LogicalFunctionsGenerator.generate_data_set(samples, high_range, low_range, outputs_pattern)
 
 
 optimizer = Optimizer(loss='least_mean_square')
