@@ -6,18 +6,22 @@ from neurons.optimizer import Optimizer
 
 
 def generate_data_set_from_config(config):
-    config['samples'] = int(config['samples'])
-    config['high_range'] = make_tuple(config['high_range'])
-    config['low_range'] = make_tuple(config['low_range'])
-
+    try:
+        config['samples'] = int(config['samples'])
+        config['high_range'] = make_tuple(config['high_range'])
+        config['low_range'] = make_tuple(config['low_range'])
+    except:
+        pass
     return LogicalFunctionsGenerator.generate_data_set(**config)
 
 
 def generate_neuron_from_config(config):
-    config['number_of_inputs'] = int(config['number_of_inputs'])
-    config['weights_range'] = make_tuple(config['weights_range'])
-    config['bias'] = float(config['bias'])
-
+    try:
+        config['number_of_inputs'] = int(config['number_of_inputs'])
+        config['weights_range'] = make_tuple(config['weights_range'])
+        config['bias'] = float(config['bias'])
+    except:
+        pass
     return Neuron(**config)
 
 

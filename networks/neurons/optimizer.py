@@ -14,9 +14,10 @@ class Optimizer:
         self.loss = loss
         self.learning_rate = learning_rate
         self.epochs = epochs
-        self.validation_error = 0
         self.continue_learning = True
         self.stop_error = stop_error
+        self.epochs_train_error = np.zeros(epochs)
+        self.epochs_validation_error = np.zeros(epochs)
 
     def train(self, neuron, training_data, validation_data, visualize):
         if visualize:
@@ -40,17 +41,20 @@ class Optimizer:
             validation_error = self.calculate_validation_error(neuron, validation_data, validation_error)
 
             epoch_error_training = self.calculate_epoch_error(training_error, len(training_data))
-            epoch_error_validation = self.calculate_epoch_error(validation_error, len(training_data))
+            epoch_error_validation = self.calculate_epoch_error(validation_error, len(validation_data))
 
-            print("Training Error = {}".format(epoch_error_training))
-            print("Validation Error = {}".format(epoch_error_validation))
+            self.epochs_train_error[epoch] = epoch_error_training
+            self.epochs_validation_error[epoch] = epoch_error_validation
+            # print(("Training Error = {}".format(epoch_error_training))
+            # print(("Validation Error = {}".format(epoch_error_validation))
 
             self.check_stop_condition(epoch_error_training)
-
             epoch += 1
 
         if visualize:
             input("Press Enter to continue...")
+
+        return self.epochs_train_error, self.epochs_validation_error, epoch
 
     def check_stop_condition(self, epoch_error_training):
         if self.loss == DISCRETE_ERROR:
@@ -83,7 +87,7 @@ class Optimizer:
             cumulative_error += error
         elif self.loss == LEAST_MEAN_ERROR:
             error = 2 * (expected_value - neuron.raw_output(input_values))
-            cumulative_error += np.power(error, 2)
+            cumulative_error += np.power(expected_value - neuron.raw_output(input_values), 2)
         else:
             raise ValueError('Wrong loss function')
         return error, cumulative_error

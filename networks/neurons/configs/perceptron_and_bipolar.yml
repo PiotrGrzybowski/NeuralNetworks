@@ -1,0 +1,27 @@
+data_set:
+    training_data:
+        samples: 2
+        high_range: (0.8, 1.0)
+        low_range:  (-1.0, -0.8)
+        outputs: [1, -1, -1, -1]
+
+
+    validation_data:
+        samples: 10
+        high_range: (0.9, 1.0)
+        low_range:  (-1.0, -0.9)
+        outputs: [1, -1, -1, -1]
+
+neuron:
+    number_of_inputs: 2
+    activation: bipolar
+    weights_range: (-1, 1)
+    bias: 1
+
+optimizer:
+    loss: discrete
+    epochs: 40
+    learning_rate: 0.01
+    stop_error: 0.0
+
+visualize: False
