@@ -150,28 +150,28 @@ print(neuron.bias)
 
 
 # print(traines.shape)
-epochs = np.arange(0, epochs)
-stds_trains = np.std(traines, axis=0)
-means_trains = np.mean(traines, axis=0)
-
-stds_validates = np.std(validates, axis=0)
-means_validates = np.mean(validates, axis=0)
-
-print(stds_trains.shape)
-print(means_trains.shape)
-print(epochs.shape)
-fig, ax0 = plt.subplots(nrows=1, sharex=True)
-ax0.errorbar(epochs, means_trains, yerr=stds_trains, fmt='-o', color='green')
-ax0.errorbar(epochs, means_validates, yerr=stds_validates, fmt='-o', color='red')
-ax0.set_title('Error depends by epoch. Adaline neuron.')
-
-
-red_patch = mpatches.Patch(color='red', label='Training data error')
-green_patch = mpatches.Patch(color='green', label='Validate data error')
-plt.legend(handles=[red_patch, green_patch])
-plt.xlabel('epochs')
-plt.ylabel('erroradaline')
-plt.show()
+# epochs = np.arange(0, epochs)
+# stds_trains = np.std(traines, axis=0)
+# means_trains = np.mean(traines, axis=0)
+#
+# stds_validates = np.std(validates, axis=0)
+# means_validates = np.mean(validates, axis=0)
+#
+# print(stds_trains.shape)
+# print(means_trains.shape)
+# print(epochs.shape)
+# fig, ax0 = plt.subplots(nrows=1, sharex=True)
+# ax0.errorbar(epochs, means_trains, yerr=stds_trains, fmt='-o', color='green')
+# ax0.errorbar(epochs, means_validates, yerr=stds_validates, fmt='-o', color='red')
+# ax0.set_title('Error depends by epoch. Adaline neuron.')
+#
+#
+# red_patch = mpatches.Patch(color='red', label='Training data error')
+# green_patch = mpatches.Patch(color='green', label='Validate data error')
+# plt.legend(handles=[red_patch, green_patch])
+# plt.xlabel('epochs')
+# plt.ylabel('erroradaline')
+# plt.show()
 #     plt.plot(np.arange(0, len(trains)), trains, color='green')
 #     plt.plot(np.arange(0, len(trains)), validate, color='red')
 #     plt.show()
