@@ -172,4 +172,10 @@ def sigmoid(z):
 
 
 def sigmoid_prime(z):
-    return np.multiply(sigmoid(z),(1-sigmoid(z)))
+    return np.multiply(sigmoid(z), (1-sigmoid(z)))
+
+
+nn = Network([784, 100, 10])
+
+for w in nn.weights:
+    print(w.shape)

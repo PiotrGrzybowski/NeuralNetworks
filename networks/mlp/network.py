@@ -1,11 +1,38 @@
 import numpy as np
 
 
-class Network:
-    def __init__(self, layers, activations):
-        self.sizes_of_layers = layers
-        self.number_of_layers = len(layers)
-        self.weights = self.weights_initialize()
+class Layer:
+    def __init__(self, units):
+        self.units = units
 
-    def weights_initialize(self):
-        return [np.random.random((y, x)) for x, y in zip(self.sizes_of_layers[:-1], self.sizes_of_layers[1:])]
+
+class Input(Layer):
+    def __init__(self, units):
+        super().__init__(units)
+        self.inputs = None
+
+    def load_inputs(self, inputs):
+        self.inputs = inputs
+
+
+class Dense(Layer):
+    def __init__(self, inputs, units, activation, initializer):
+        super().__init__(units)
+        self.inputs = inputs
+        self.units = units
+        self.activation = activation
+        self.initializer = initializer
+        self.weights = self.initialize_weights(initializer)
+        self.bias = self.initialize_bias(initializer)
+
+    def initialize_weights(self, initializer):
+        return initializer.initialize_weights(self.units, self.inputs)
+
+    def initialize_bias(self, initializer):
+        return initializer.initialize_bias(self.units)
+
+
+class Network:
+    def __init__(self, layers):
+        self.layers = layers
+
