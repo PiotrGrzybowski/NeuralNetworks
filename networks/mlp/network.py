@@ -1,5 +1,7 @@
 import numpy as np
 
+from mlp.activation_functions import get_activation_derivative
+
 
 class Layer:
     def __init__(self, units):
@@ -24,16 +26,18 @@ class Input(Layer):
 
 
 class Dense(Layer):
-    def __init__(self, input_layer, units, activation, initializer):
+    def __init__(self, input_layer, units, activation_function, initializer):
         super().__init__(units)
         self.input_layer = input_layer
         self.units = units
-        self.activation = activation
+        self.activation_function = activation_function
+        self.activation_derivative = get_activation_derivative(activation_function)
         self.initializer = initializer
         self.weights = self.initialize_weights(initializer)
         self.bias = self.initialize_bias(initializer)
+        self.activations = None
         self.outputs = None
-        self.neuron_activations = None
+        self.derivative_outputs = None
 
     def initialize_weights(self, initializer):
         return initializer.initialize_weights(self.units, self.input_layer)
@@ -42,14 +46,18 @@ class Dense(Layer):
         return initializer.initialize_bias(self.units)
 
     def calculate_output(self):
-        self.outputs = self.activation(np.dot(self.weights, self.input_layer.outputs))
-        return self.outputs
+        self.activations = np.dot(self.weights, self.input_layer.outputs)
+        self.outputs = self.activation_function(self.activations)
+        self.derivative_outputs = self.activation_derivative(self.activations)
+
+    @property
+    def inputs(self):
+        return self.input_layer.outputs
 
 
 class Network:
     def __init__(self, layers):
         self.layers = layers
-        self.outputs = None
 
     def load_inputs(self, inputs):
         self.layers[0].load_inputs(inputs)
@@ -57,10 +65,28 @@ class Network:
     def propagate_forward(self):
         for layer in self.layers:
             layer.calculate_output()
-        self.outputs = self.layers[-1].outputs
-        return self.outputs
 
+    def get_layer(self, i):
+        return self.layers[i]
 
+    def is_last_layer(self, index):
+        return index == len(self.layers) - 1
 
+    def get_weights_of_layer(self, i):
+        return self.layers[i].weights
 
+    @property
+    def last_layer(self):
+        return self.layers[-1]
 
+    @property
+    def outputs(self):
+        return self.last_layer.outputs
+
+    @property
+    def activations(self):
+        return self.last_layer.activations
+
+    @property
+    def number_of_layers(self):
+        return len(self.layers)
