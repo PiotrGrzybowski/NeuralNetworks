@@ -7,7 +7,7 @@ class LossFunction:
         raise NotImplementedError("Should have implemented this!")
 
     @staticmethod
-    def calculate_error_derivative(expected, predicted):
+    def calculate_error_derivative(expected, activations, derivative_activations):
         raise NotImplementedError("Should have implemented this!")
 
 
@@ -17,5 +17,5 @@ class MeanSquaredError(LossFunction):
         return 0.5 * np.power(expected - activations, 2)
 
     @staticmethod
-    def calculate_error_derivative(expected, raw_outputs, activation, activation_derivative):
-        return expected - raw_outputs
+    def calculate_error_derivative(expected, activations, derivative_activations):
+        return (activations - expected) * derivative_activations

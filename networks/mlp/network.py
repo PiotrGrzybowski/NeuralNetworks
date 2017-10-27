@@ -33,6 +33,7 @@ class Dense(Layer):
         self.weights = self.initialize_weights(initializer)
         self.bias = self.initialize_bias(initializer)
         self.outputs = None
+        self.neuron_activations = None
 
     def initialize_weights(self, initializer):
         return initializer.initialize_weights(self.units, self.input_layer)
