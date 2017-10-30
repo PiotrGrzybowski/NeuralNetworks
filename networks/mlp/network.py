@@ -112,11 +112,14 @@ class Network:
             layer.calculate_output()
 
     def propagate_backward(self, loss_function):
-        biases_error = [layer.calculate_error(loss_function) for layer in reversed(self.layers[1:])]
-        # print(np.expand_dims(np.mean(biases_error[0], axis=1), axis=1))
-        weights_error = [np.dot(error, layer.inputs.T) for error, layer in zip(biases_error, reversed(self.layers[1:]))]
-        return biases_error
-        # return weights_error, biases_error
+        biases_error = []
+        weights_error = []
+
+        for layer in self.reversed_layers:
+            biases_error.append(layer.calculate_error(loss_function))
+            weights_error.append(np.dot(biases_error[-1], layer.inputs.T))
+
+        return biases_error, weights_error
 
     def calculate_cost(self, sample, loss_function):
         self.load_sample(sample)
@@ -125,11 +128,11 @@ class Network:
         return loss_function.calculate_cost(self.last_layer.expected_value, self.last_layer.outputs)
 
     def update_weights(self, weights_gradient):
-        for layer, gradient in zip(reversed(self.layers[1:]), weights_gradient):
+        for layer, gradient in zip(self.reversed_layers, weights_gradient):
             layer.weights -= gradient
 
     def update_biases(self, biases_gradient):
-        for layer, gradient in zip(reversed(self.layers[1:]), biases_gradient):
+        for layer, gradient in zip(self.reversed_layers, biases_gradient):
             layer.biases -= gradient
 
     @property
@@ -143,3 +146,7 @@ class Network:
     @property
     def correct_prediction(self):
         return self.last_layer.expected_class == self.last_layer.predicted_class
+
+    @property
+    def reversed_layers(self):
+        return reversed(self.layers[1:])

@@ -15,7 +15,7 @@ dense_1 = DenseLayer(input_layer, 5, activation, initializer)
 dense_2 = OutputLayer(dense_1, 10, activation, initializer)
 
 network = Network([input_layer, dense_1, dense_2])
-optimizer = GradientDescent(20, 0.5, MeanSquaredError, 20)
+optimizer = GradientDescent(20, 0.5, MeanSquaredError, 1)
 optimizer.train(network, images)
 
 # # data = np.zeros(shape=(70, 3))

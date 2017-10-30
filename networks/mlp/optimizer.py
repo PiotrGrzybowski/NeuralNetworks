@@ -16,18 +16,21 @@ class Optimizer:
             for i in np.arange(0, len(training_data) - self.mini_batch, self.mini_batch):
                 network.load_batch(training_data[i: i + self.mini_batch])
                 network.propagate_forward()
-
-                biases_error = network.propagate_backward(self.loss_function)
-                weights_error = [np.dot(e, layer.inputs.T) for e, layer in zip(biases_error, reversed(network.layers[1:]))]
-                biases_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in biases_error]
-                weights_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in weights_error]
+                biases_error, weights_error = self.mini_batch_error(*network.propagate_backward(self.loss_function))
 
                 network.update_weights(self.calculate_gradient(weights_error))
                 network.update_biases(self.calculate_gradient(biases_error))
 
             epoch_cost, epoch_accuracy = self.calculate_epoch_cost(network, training_data)
+
             print("Epoch: {}, cost = {}".format(epoch, epoch_cost))
             print("Accuracy: {} / {}".format(epoch_accuracy, len(training_data)))
+
+    @staticmethod
+    def mini_batch_error(biases_error, weights_error):
+        biases_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in biases_error]
+        weights_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in weights_error]
+        return biases_error, weights_error
 
     def calculate_epoch_cost(self, network, data):
         cost = 0.0
