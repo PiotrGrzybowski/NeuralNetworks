@@ -23,8 +23,6 @@ def parse_images(path):
             print("Shape = {}, index = {}".format(img.shape, filename))
 
     return l
-    # return [(np.asarray(Image.open(path + filename).convert('1')).astype(int).reshape(IMAGE_ROW_SHAPE),
-    #         get_label_from_filename(filename)) for filename in os.listdir(path)]
 
 
 def list_to_arrays(data):
