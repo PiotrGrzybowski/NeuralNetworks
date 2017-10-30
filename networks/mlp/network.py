@@ -93,17 +93,30 @@ class Network:
         self.last_layer.expected_value = inputs[1]
         self.last_layer.expected_class = np.argmax(inputs[1])
 
+    def load_batch(self, samples):
+        inputs = np.zeros(shape=(70, len(samples)))
+        expected_values = np.zeros(shape=(10, len(samples)))
+        expected_class = []
+
+        for i in range(len(samples)):
+            inputs[:, i] = samples[i][0].squeeze()
+            expected_values[:, i] = samples[i][1].squeeze()
+            expected_class.append(np.argmax(samples[i][1]))
+
+        self.layers[0].load_inputs(inputs)
+        self.last_layer.expected_value = expected_values
+        self.last_layer.expected_class = expected_class
+
     def propagate_forward(self):
         for layer in self.layers:
             layer.calculate_output()
 
-    def propagate_backward(self, sample, loss_function):
-        self.load_sample(sample)
-        self.propagate_forward()
+    def propagate_backward(self, loss_function):
         biases_error = [layer.calculate_error(loss_function) for layer in reversed(self.layers[1:])]
+        # print(np.expand_dims(np.mean(biases_error[0], axis=1), axis=1))
         weights_error = [np.dot(error, layer.inputs.T) for error, layer in zip(biases_error, reversed(self.layers[1:]))]
-
-        return weights_error, biases_error
+        return biases_error
+        # return weights_error, biases_error
 
     def calculate_cost(self, sample, loss_function):
         self.load_sample(sample)

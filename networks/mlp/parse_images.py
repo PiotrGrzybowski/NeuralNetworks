@@ -2,10 +2,11 @@ import numpy as np
 import os
 from PIL import Image
 from sklearn import preprocessing
+
 lb = preprocessing.LabelBinarizer()
 lb.fit(range(10))
 
-DIRECTORY = '/home/piotr/Workspace/MachineLearning/NeuralNetworks/data/digits/'
+DIRECTORY = '/home/piotr/Workspace/Repositories/NeuralNetworks/data/set/'
 IMAGE_ROW_SHAPE = (70,)
 
 

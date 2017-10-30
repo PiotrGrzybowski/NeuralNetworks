@@ -3,16 +3,25 @@ from random import shuffle
 
 
 class Optimizer:
-    def __init__(self, epochs, learning_rate, loss_function):
+    def __init__(self, epochs, learning_rate, loss_function, mini_batch):
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.loss_function = loss_function
+        self.mini_batch = mini_batch
 
     def train(self, network, training_data):
         for epoch in range(self.epochs):
             shuffle(training_data)
-            for sample in training_data:
-                weights_error, biases_error = network.propagate_backward(sample, self.loss_function)
+
+            for i in np.arange(0, len(training_data) - self.mini_batch, self.mini_batch):
+                network.load_batch(training_data[i: i + self.mini_batch])
+                network.propagate_forward()
+
+                biases_error = network.propagate_backward(self.loss_function)
+                weights_error = [np.dot(e, layer.inputs.T) for e, layer in zip(biases_error, reversed(network.layers[1:]))]
+                biases_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in biases_error]
+                weights_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in weights_error]
+
                 network.update_weights(self.calculate_gradient(weights_error))
                 network.update_biases(self.calculate_gradient(biases_error))
 
@@ -45,7 +54,7 @@ class MomentumGradientDescent(GradientDescent):
         self.previous_gradient = None
 
     def calculate_gradient(self, error):
-        if self.previous_gradient is  None:
+        if self.previous_gradient is None:
             self.previous_gradient = super().calculate_gradient(error)
             return self.previous_gradient
         else:
