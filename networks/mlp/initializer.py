@@ -15,7 +15,9 @@ class RandomInitializer(Initializer):
         self.bias_range = bias_range
 
     def initialize_weights(self, units, inputs):
-        return np.random.uniform(*self.weight_range, (units, inputs.units))
+        # return np.random.uniform(*self.weight_range, (units, inputs.units))
+        return np.random.randn(units, inputs.units)
 
     def initialize_bias(self, units):
-        return np.random.uniform(*self.bias_range, units)
+        # return np.random.uniform(*self.bias_range, units)
+        return np.random.randn(units, 1)

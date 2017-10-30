@@ -1,16 +1,34 @@
-import network2
 import numpy as np
 
-net = network2.Network([6, 100, 18], cost = network2.CrossEntropyCost)
-train_data = ((np.asmatrix(np.load('allX.npy'))), (np.asmatrix(np.load('allY.npy'))))
-# test_data = (np.asmatrix(np.load('X_test.npy').T), np.asmatrix(np.load('Y_test.npy')).T)
+from mlp.activation_functions import sigmoid
+from mlp.initializer import RandomInitializer
+from mlp.loss_functions import MeanSquaredError
+from mlp.network import Input, Dense, Network
+from mlp.optimizer import GradientDescent
+
+images = np.load('/home/piotr/Workspace/MachineLearning/NeuralNetworks/data/images.npy')
+initializer = RandomInitializer([-5, 5], [1, 1])
+activation = sigmoid
+
+input_layer = Input(70)
+dense_1 = Dense(input_layer, 40, activation, initializer)
+dense_2 = Dense(dense_1, 10, activation, initializer)
+
+network = Network([input_layer, dense_1, dense_2])
 
 
-evaluation_cost, evaluation_accuracy,training_cost, training_accuracy = \
-    net.SGD(train_data, 20, 5, 0.05,
-        lmbda= 5,
-        evaluation_data=None,
-        monitor_evaluation_accuracy=False,
-        monitor_evaluation_cost=False,
-        monitor_training_accuracy=True,
-        monitor_training_cost=False)
+############MOCKING##################
+weights = np.load('/home/piotr/Workspace/MachineLearning/NeuralNetworks/networks/trash/neural-networks-and-deep-learning-master/src/weights.npy', encoding = 'latin1')
+biases = np.load('/home/piotr/Workspace/MachineLearning/NeuralNetworks/networks/trash/neural-networks-and-deep-learning-master/src/biases.npy', encoding = 'latin1')
+
+dense_1.weights = weights[0]
+dense_1.biases = biases[0]
+
+dense_2.weights = weights[1]
+dense_2.biases = biases[1]
+
+print(dense_1.weights[0][0])
+####################################################
+optimizer = GradientDescent(1, 0.5, MeanSquaredError)
+optimizer.train(network, images)
+

@@ -34,7 +34,7 @@ class Dense(Layer):
         self.activation_derivative = get_activation_derivative(activation_function)
         self.initializer = initializer
         self.weights = self.initialize_weights(initializer)
-        self.bias = self.initialize_bias(initializer)
+        self.biases = self.initialize_bias(initializer)
         self.activations = None
         self.outputs = None
         self.derivative_outputs = None
@@ -46,7 +46,7 @@ class Dense(Layer):
         return initializer.initialize_bias(self.units)
 
     def calculate_output(self):
-        self.activations = np.dot(self.weights, self.input_layer.outputs)
+        self.activations = np.dot(self.weights, self.input_layer.outputs) + self.biases
         self.outputs = self.activation_function(self.activations)
         self.derivative_outputs = self.activation_derivative(self.activations)
 
