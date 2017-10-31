@@ -11,15 +11,17 @@ class Optimizer:
 
     def train(self, network, training_data):
         for epoch in range(self.epochs):
-            shuffle(training_data)
+            # shuffle(training_data)
 
             for i in np.arange(0, len(training_data) - self.mini_batch, self.mini_batch):
                 network.load_batch(training_data[i: i + self.mini_batch])
                 network.propagate_forward()
-                biases_error, weights_error = self.mini_batch_error(*network.propagate_backward(self.loss_function))
-
-                network.update_weights(self.calculate_gradient(weights_error))
-                network.update_biases(self.calculate_gradient(biases_error))
+                biases_error, weights_error = network.propagate_backward(self.loss_function)
+                # print("Error = {}".format(np.sum(biases_error[0])))
+                gradient = self.calculate_gradient(weights_error)
+                network.update_weights(gradient)
+                calculate_gradient = self.calculate_gradient(biases_error)
+                network.update_biases(calculate_gradient)
 
             epoch_cost, epoch_accuracy = self.calculate_epoch_cost(network, training_data)
 

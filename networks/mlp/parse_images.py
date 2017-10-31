@@ -6,7 +6,7 @@ from sklearn import preprocessing
 lb = preprocessing.LabelBinarizer()
 lb.fit(range(10))
 
-DIRECTORY = '/home/piotr/Workspace/Repositories/NeuralNetworks/data/set/'
+DIRECTORY = '/home/piotr/Workspace/MachineLearning/NeuralNetworks/29_10_18_cyfry_zima_17-18_ostateczny_zbior/'
 IMAGE_ROW_SHAPE = (70,)
 
 
@@ -17,9 +17,12 @@ def get_label_from_filename(filename):
 def parse_images(path):
     l = []
     for filename in os.listdir(path):
-        img = np.asarray(Image.open(path + filename).convert('1')).astype(int)
+        img = np.invert(np.asarray(Image.open(path + filename).convert('1'))).astype(int)
         if img.shape == (10, 7):
-            l.append((img.reshape(IMAGE_ROW_SHAPE), get_label_from_filename(filename)))
+            # print(img)
+            # print(img.reshape(IMAGE_ROW_SHAPE, order='F'))
+
+            l.append((img.reshape(IMAGE_ROW_SHAPE, order='F'), get_label_from_filename(filename)))
         else:
             print("Shape = {}, index = {}".format(img.shape, filename))
 

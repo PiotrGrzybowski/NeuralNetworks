@@ -53,7 +53,8 @@ class DenseLayer(Layer):
         self.derivative_outputs = self.activation_derivative(self.activations)
 
     def calculate_error(self, loss_function):
-        self.error = np.dot(self.next_layer.weights.T, self.next_layer.error) * self.derivative_outputs
+        dot = np.dot(self.next_layer.weights.T, self.next_layer.error)
+        self.error = dot * self.derivative_outputs
         return self.error
 
     @property
@@ -118,6 +119,7 @@ class Network:
         for layer in self.reversed_layers:
             biases_error.append(layer.calculate_error(loss_function))
             weights_error.append(np.dot(biases_error[-1], layer.inputs.T))
+            # print()
 
         return biases_error, weights_error
 
