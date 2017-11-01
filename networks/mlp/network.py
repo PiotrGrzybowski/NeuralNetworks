@@ -6,26 +6,26 @@ from mlp.activation_functions import get_activation_derivative
 class Layer:
     def __init__(self, units):
         self.units = units
+        self.outputs = None
+        self.inputs = None
+
+    def load_inputs(self, inputs):
+        self.inputs = inputs
 
     def calculate_output(self):
         raise NotImplementedError("Should have implemented this!")
 
 
-class InputLayer(Layer):
+class Input(Layer):
     def __init__(self, units):
         super().__init__(units)
-        self.inputs = None
-        self.outputs = None
-
-    def load_inputs(self, inputs):
-        self.inputs = inputs
 
     def calculate_output(self):
         self.outputs = self.inputs
         return self.outputs
 
 
-class DenseLayer(Layer):
+class Dense(Layer):
     def __init__(self, input_layer, units, activation_function, initializer):
         super().__init__(units)
         self.input_layer = input_layer
@@ -58,11 +58,21 @@ class DenseLayer(Layer):
         return self.error
 
     @property
-    def inputs(self):
+    def input(self):
         return self.input_layer.outputs
 
 
-class OutputLayer(DenseLayer):
+class Dropout(Layer):
+    def __init__(self, units, probability):
+        super().__init__(units)
+        self.probability = probability
+
+    def calculate_output(self):
+        pass
+
+
+
+class Output(Dense):
     def __init__(self, input_layer, units, activation_function, initializer):
         super().__init__(input_layer, units, activation_function, initializer)
         self.expected_value = None
@@ -118,8 +128,7 @@ class Network:
 
         for layer in self.reversed_layers:
             biases_error.append(layer.calculate_error(loss_function))
-            weights_error.append(np.dot(biases_error[-1], layer.inputs.T))
-            # print()
+            weights_error.append(np.dot(biases_error[-1], layer.input.T))
 
         return biases_error, weights_error
 

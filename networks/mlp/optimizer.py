@@ -1,47 +1,43 @@
 import numpy as np
 from random import shuffle
 
+from mlp.utils import generate_mini_batches
+
 
 class Optimizer:
     def __init__(self, epochs, learning_rate, loss_function, mini_batch):
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.loss_function = loss_function
-        self.mini_batch = mini_batch
+        self.batch_size = mini_batch
 
     def train(self, network, training_data):
         for epoch in range(self.epochs):
-            # shuffle(training_data)
+            shuffle(training_data)
 
-            for i in np.arange(0, len(training_data) - self.mini_batch, self.mini_batch):
-                network.load_batch(training_data[i: i + self.mini_batch])
+            for mini_batch in generate_mini_batches(training_data, self.batch_size):
+                network.load_batch(mini_batch)
                 network.propagate_forward()
-                biases_error, weights_error = network.propagate_backward(self.loss_function)
-                # print("Error = {}".format(np.sum(biases_error[0])))
-                gradient = self.calculate_gradient(weights_error)
-                network.update_weights(gradient)
-                calculate_gradient = self.calculate_gradient(biases_error)
-                network.update_biases(calculate_gradient)
+                biases_error, weights_error = self.mini_batch_error(*network.propagate_backward(self.loss_function))
 
-            epoch_cost, epoch_accuracy = self.calculate_epoch_cost(network, training_data)
+                network.update_weights(self.calculate_gradient(weights_error))
+                network.update_biases(self.calculate_gradient(biases_error))
+
+            epoch_cost, epoch_accuracy = self.calculate_epoch_cost_accuracy(network, training_data)
 
             print("Epoch: {}, cost = {}".format(epoch, epoch_cost))
-            print("Accuracy: {} / {}".format(epoch_accuracy, len(training_data)))
+            print("Accuracy: {} / {}".format(int(epoch_accuracy), len(training_data)))
+
+    def mini_batch_error(self, biases_error, weights_error):
+        return self.mean_biases_by_samples(biases_error), weights_error
 
     @staticmethod
-    def mini_batch_error(biases_error, weights_error):
-        biases_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in biases_error]
-        weights_error = [np.expand_dims(np.mean(error, axis=1), axis=1) for error in weights_error]
-        return biases_error, weights_error
+    def mean_biases_by_samples(biases_error):
+        return [np.expand_dims(np.mean(error, axis=1), axis=1) for error in biases_error]
 
-    def calculate_epoch_cost(self, network, data):
-        cost = 0.0
-        accuracy = 0
-
-        for sample in data:
-            cost += network.calculate_cost(sample, self.loss_function) / len(data)
-            accuracy += network.correct_prediction
-        return cost, accuracy
+    def calculate_epoch_cost_accuracy(self, network, data):
+        return np.sum([[network.calculate_cost(sample, self.loss_function) / len(data),
+                        network.correct_prediction] for sample in data], axis=0)
 
     def calculate_gradient(self, error):
         raise NotImplementedError("Should have implemented this!")

@@ -39,18 +39,22 @@ def list_to_arrays(data):
     return images, labels
 
 
-images = parse_images(DIRECTORY)
-train_x, train_y = list_to_arrays(images)
+def generate_mini_batches(data, mini_batch):
+    for i in np.arange(0, len(data) - mini_batch, mini_batch):
+        yield data[i: i + mini_batch]
 
-print(train_x.shape)
-print(train_y.shape)
-
-training_data = []
-print(train_y[0])
-ty = lb.transform(train_y)
-print()
-for x, y in zip(train_x, ty):
-    training_data.append(((np.expand_dims(x, axis=1)), np.expand_dims(y, axis=1)))
-
-print(len(training_data))
-np.save('images.npy', training_data)
+# images = parse_images(DIRECTORY)
+# train_x, train_y = list_to_arrays(images)
+#
+# print(train_x.shape)
+# print(train_y.shape)
+#
+# training_data = []
+# print(train_y[0])
+# ty = lb.transform(train_y)
+# print()
+# for x, y in zip(train_x, ty):
+#     training_data.append(((np.expand_dims(x, axis=1)), np.expand_dims(y, axis=1)))
+#
+# print(len(training_data))
+# np.save('images.npy', training_data)
