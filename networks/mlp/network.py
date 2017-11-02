@@ -71,7 +71,6 @@ class Dropout(Layer):
         pass
 
 
-
 class Output(Dense):
     def __init__(self, input_layer, units, activation_function, initializer):
         super().__init__(input_layer, units, activation_function, initializer)
@@ -161,3 +160,4 @@ class Network:
     @property
     def reversed_layers(self):
         return reversed(self.layers[1:])
+
