@@ -6,8 +6,8 @@ from mlp.activation_functions import get_activation_derivative
 class Layer:
     def __init__(self, units):
         self.units = units
-        self.outputs = None
         self.inputs = None
+        self.outputs = None
 
     def load_inputs(self, inputs):
         self.inputs = inputs
@@ -53,9 +53,20 @@ class Dense(Layer):
         self.derivative_outputs = self.activation_derivative(self.activations)
 
     def calculate_error(self, loss_function):
+        # dot = self.multiply_weights_error()
         dot = np.dot(self.next_layer.weights.T, self.next_layer.error)
         self.error = dot * self.derivative_outputs
         return self.error
+
+    def multiply_weights_error(self):
+        dot = np.zeros(shape=(self.next_layer.weights.shape[1], self.next_layer.error.shape[1]))
+        weights = self.next_layer.weights.T
+        errors = self.next_layer.error
+        for i in range(len(weights)):
+            for j in range(len(errors[0])):
+                for k in range(len(errors)):
+                    dot[i][j] += weights[i][k] * errors[k][j]
+        return dot
 
     @property
     def input(self):
@@ -137,9 +148,9 @@ class Network:
 
         return loss_function.calculate_cost(self.last_layer.expected_value, self.last_layer.outputs)
 
-    def update_weights(self, weights_gradient):
+    def update_weights(self, weights_gradient, reg):
         for layer, gradient in zip(self.reversed_layers, weights_gradient):
-            layer.weights -= gradient
+            layer.weights = layer.weights - gradient - reg * layer.weights
 
     def update_biases(self, biases_gradient):
         for layer, gradient in zip(self.reversed_layers, biases_gradient):

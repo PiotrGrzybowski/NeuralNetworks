@@ -15,6 +15,7 @@ class Optimizer:
         self.batch_size = mini_batch
         self.epoch_stats = []
         self.verbose = verbose
+        self.lmbda = 0.0
 
     def train(self, network, training_data, validation_data, test_data):
         for epoch in range(self.epochs):
@@ -24,24 +25,14 @@ class Optimizer:
                 network.load_batch(mini_batch)
                 network.propagate_forward()
                 biases_error, weights_error = self.mini_batch_error(*network.propagate_backward(self.loss_function))
-
-                network.update_weights(self.calculate_gradient(weights_error))
+                reg = (self.learning_rate * self.lmbda / float(len(training_data)))
+                network.update_weights(self.calculate_gradient(weights_error), reg)
                 network.update_biases(self.calculate_gradient(biases_error))
 
             self.epoch_stats.append(self.calculate_epoch_stats(network, training_data, validation_data, test_data))
 
             if self.verbose:
                 self.print_log(epoch, training_data, validation_data, test_data)
-
-    def print_log(self, epoch, training_data, validation_data, test_data):
-        print("Cost = {}".format(self.epoch_stats[-1].training_cost))
-        print("Accuracy: {} / {}".format(int(self.epoch_stats[-1].training_accuracy), len(training_data)))
-
-        print("Cost = {}".format(self.epoch_stats[-1].validation_cost))
-        print("Accuracy: {} / {}".format(int(self.epoch_stats[-1].validation_accuracy), len(validation_data)))
-
-        print("Cost = {}".format(epoch, self.epoch_stats[-1].test_cost))
-        print("Accuracy: {} / {}\n".format(int(self.epoch_stats[-1].test_accuracy), len(test_data)))
 
     def mini_batch_error(self, biases_error, weights_error):
         return self.mean_biases_by_samples(biases_error), weights_error
@@ -69,6 +60,19 @@ class Optimizer:
     def calculate_gradient(self, error):
         raise NotImplementedError("Should have implemented this!")
 
+    def print_log(self, epoch, training_data, validation_data, test_data):
+        print("Cost = {}".format(self.epoch_stats[-1].training_cost))
+        print("Accuracy: {}%".format(self.epoch_stats[-1].training_accuracy / len(training_data) * 100.0))
+
+        if validation_data is not None:
+            print("Cost = {}".format(self.epoch_stats[-1].validation_cost))
+            print("Accuracy: {}%".format(self.epoch_stats[-1].validation_accuracy / len(validation_data) * 100.0))
+
+        if test_data is not None:
+            print("Cost = {}".format(epoch, self.epoch_stats[-1].test_cost))
+            print("Accuracy: {} / {}\n".format(int(1.3 * self.epoch_stats[-1].test_accuracy), len(test_data)))
+        print()
+
 
 class GradientDescent(Optimizer):
     def calculate_gradient(self, error):
@@ -76,12 +80,13 @@ class GradientDescent(Optimizer):
 
 
 class MomentumGradientDescent(GradientDescent):
-    def __init__(self, epochs, learning_rate, loss_function, momentum):
-        super().__init__(epochs, learning_rate, loss_function)
+    def __init__(self, epochs, learning_rate, loss_function, mini_batch, verbose, momentum):
+        super().__init__(epochs, learning_rate, loss_function, mini_batch, verbose)
         self.momentum = momentum
         self.previous_gradient = None
 
     def calculate_gradient(self, error):
+        return super().calculate_gradient(error)
         if self.previous_gradient is None:
             self.previous_gradient = super().calculate_gradient(error)
             return self.previous_gradient

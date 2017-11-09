@@ -16,8 +16,8 @@ class Tuner:
         optimizer = self.build_optimizer()
         network = self.build_network()
 
-        # for learning_rate in self.learning_rates:
-        #     optimizer.train(network, training_data, validation_data, test_data)
+        for learning_rate in self.learning_rates:
+            optimizer.train(network, training_data, validation_data, test_data)
 
     def build_network(self):
         initializer = GaussianNormalScaled()
