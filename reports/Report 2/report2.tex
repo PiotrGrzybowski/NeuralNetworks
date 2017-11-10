@@ -5,9 +5,9 @@
  \usepackage{geometry} 
  \usepackage{graphicx}
 \newgeometry{tmargin=3cm, bmargin=3cm, lmargin=3cm, rmargin=3cm}
-\renewcommand{\figurename}{Wykres}
+\renewcommand{\figurename}{Tabela}
 \title{Sieć neuronowa MLP w problemie klasyfikacji ręcznie pisanych cyfr.}
-\date{11 październik 2017}
+\date{09 listopada 2017}
 \author{Piotr Grzybowski}
  
 \begin{document}
@@ -52,126 +52,61 @@
 	Podstawowym problemem w poprawności działania sieci neuronowej jest dobór odpowiednich hiperparametrów. W badaniach zbadane zostaną hiperparametry pod względem jakości predykcji jak i szybkości uczenia. Kolejnym problemem jest wybór sposobu optymalizacji funkcji kosztu. Kolejnym problemem jej przeciwdziałanie "overfittingowi", zbadana zostanie regularyzacja. 
 	
 
-	\subsection{Learning rate}
-	\subsection{Batch size}
-	\subsection{Liczba neuronów}
-	\subsection{Metody optymalizacji}
+	\subsection{Szybkość uczenia w przypadku liczby neuronów w warstwie ukrytej}
+	W części tej została zbadana wymagana liczba epok do wyuczenia sieci neuronowej. Wyniki badań przedstawia poniższa tabela:
 	
-	    Wymagana liczba epok do wyuczenia Adaline w zależności od wielkości zbioru uczącego na wykresie 1 poniżej:
-	    
 	\begin{figure}[h]
-
 		\centering
 		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_dane_adaline_and.png}
-		
+		\includegraphics[width=0.5\textwidth]{tabela_liczba_neuronow.jpg}
 	\end{figure}	 
-	Na podstawie powyższego wykresu wyraźnie widać, że wraz ze wzrostem liczebności zbioru treningowego maleje liczba epok wymaganych do wyuczenia Adaline. Dzieje się tak dlatego, że podczas jednej epoki dostosowujemy wagi więcej razy.\\[0.5cm] 
+	Na podstawie powyższej tabeli można stwierdzić, że zbyt mała liczba neuronów w warstwie ukrytej wymaga większej liczby epok do wyuczenia modelu. Charakteryzuje się także tym, że skuteczność predykcji nie jest wysoka, mała liczba neuronów zaczyna dokładnie odzwierciedlać zbiór treningowy (ang. overfitting), natomiast nie są one w stanie w dobry sposób reprezentować danych w zbiorze, który nie uczestniczył w procesie uczenia. Po drugie zbyt duża liczba neuronów w warstwie ukrytej powoduje, że liczba wymaganych epok się zwiększa, jeżeli natomiast będzie ich zbyt dużo do wielkości posiadanego zbioru uczącego możemy zauważyć zjawisko nie douczenia (ang. underfitting), model nie jest w stanie zapreprezentować dobrze nawet danych treningowych jeżeli jest ich niewystarczająco dużo.
 	
-	Wymagana liczba epok do wyuczenia Adaline w zależności od stałej uczenia na wykresie 2 poniżej:
+	\subsection{Przebadanie różnych współczynników uczenia}
+	W części tej została zbadana wielkość stałej uczenia w trakcie wyuczenia sieci neuronowej. Wyniki badań przedstawia poniższa tabela:
 	
-	\begin{figure}[h]
-
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_rate_adaline.png}
-		
-	\end{figure}   
-	Na podstawie powyższego wykresu wyraźnie widać, że zależność liczby epok od kroku uczenia ma pewne minimum. Istnieje taki zakres wartości stałej uczenia w której Adaline wyucza się najszybciej. Oznacza to, że wartość kroku uczenia nie może być ani zbyt mała ani zbyt duża.
-	\newpage
-	Wymagana liczba epok do wyuczenia Adaline w zależności od zakresu initializowanych wag na wykresie 3 poniżej:
-	
-	\begin{figure}[h]
-
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_wagi_adaline_and.png}
-		
-	\end{figure}   
-	Zakres wag początkowych nie ma większego znaczenia w tym przypadku. Każdy z zakresów charakteryzuje się dużą wariancją i brakuje stabilnych wyników.
-\newpage
-	\subsection{Perceptron}
-	\subsubsection{Funkcja aktywacji unipolarna}
-	Wymagana liczba epok do wyuczenia perceptronu prostego dla funkcji aktywacji unipolarnej w zależności od wielkości zbioru uczącego na wykresie 4 poniżej:
 	\begin{figure}[h]
 		\centering
 		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_dane_perceptron_unipolar_and.png}
+		\includegraphics[width=0.5\textwidth]{tabela_stala_uczenia.jpg}
+	\end{figure}	 
+	Na podstawie powyższej tabeli można stwierdzić, że zbyt mała stała uczenia powoduje, że model może utknąć w minimum lokalnym jak i potrzebuje więcej epok aby wyuczyć się na danych treningowych. Z kolei zbyt duża stałą uczenia powoduje, że możemy oscylować wokół minimum funkcji kosztu i nigdy do niego nie trafimy, powoduje to, że nasz model osiąga gorsze wyniki niż oczekujemy. Kiedy stałą uczenia jest dużo za dużo model nie uczy się w cale, podobnie w przypadku zbyt małej dążącej do zera stałej uczenia.
+	
+	\subsection{Wpływ liczebności zbioru uczącego}
+	W części tej została zbadana wielkość zbioru treningowego w trakcie wyuczenia sieci neuronowej. Wyniki badań przedstawia poniższa tabela:
+	
+	\begin{figure}[h]
+		\centering
+		\caption{}
+		\includegraphics[width=0.5\textwidth]{tabela_zbior.jpg}
+	\end{figure}	 
+	Większy zbiór treningowy przeciwdziała overfittingowi. W naszym przypadku wymagana jest większa liczba danych do wyuczenia modelu do predykcji na wyższym poziomie. Powinno się zastosować proces Data Augumentation to generowania większej liczby danych, jednakże wykraczało to za ramy tego zadania. Z doświadczenia, zbyt duża liczba danych może spowodaować że model nie będzie się w stanie wyuczyć w akceptowalnym czasie bądź nigdy.
+	
+	\subsection{Metody optymalizacji}
+	Przebadane zostały moteody optimalizacji gradientu prostego z dodatkiem momentum i bez. Momentum zapewnia nam szybsze zbieganie do minimum funkcji kosztu. W porównaniu do poprzednich eksperymentów, prrzy zastosowaniu momentum wystarczało do trzech epok przy 64 neuronach i współczynniku uczenia 1.3 aby szybko osiągac wyniki powyżej 80 procent na zbiorze walidacyjnym.
+	   \newpage
+	\subsection{Wpływ inicjalizacji wartości wag początkowych}
+	W zadaniu zostały zbadane dwa sposoby initializowania wag. Pierwszym z nich było zastosowanie Rozkładu Normalnego o średniej równej 0.0 oraz odchyleniu standardowym 1.0. Wiąże się to jednak z tym, że wagi nie będą mocno zróżnicowane. Rozkład losowanych zmiennych będzie płaski:
+	
+	\begin{figure}[h]
+		\centering
+		\caption{}
+		\includegraphics[width=0.5\textwidth]{gauss1.jpg}
 	\end{figure}
 	
-	Wnioski do tego wykresu są analogiczne do wykresu 1. Jak w przypadku Adaline.\\[0.5cm]
+	Lepszym sposobem będzie użycie Rozkładu Normalnego, z przeskalowanym odchyleniem standardowym o pierwiastek liczby neuronów w initializowanej warstwie. Spowoduje to, że rozkład losowanych zmiennych będzie bardziej zróżnicowany:
 	
-	Wymagana liczba epok do wyuczenia perceptronu prostego dla funkcji aktywacji unipolarnej w zależności od wielkości zbioru uczącego na wykresie 5 poniżej:
-	
-	\begin{figure}[h]
+	 \begin{figure}[h]
 		\centering
 		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_rate_perceptron_unipolar.png}
+		\includegraphics[width=0.5\textwidth]{gauss2.jpg}
 	\end{figure}
 	
-	Uczenie perceptronu nie ma nic wspólnego z algorymem gradientu prostego. Nie ma więc znaczenia jak duża będzie stała uczenia. Wagi będą po prostu przeskalowane.
-	\newpage
-		Wymagana liczba epok do wyuczenia perceptronu prostego dla funkcji aktywacji unipolarnej w zależności od wielkości zbioru uczącego na wykresie 6 poniżej:
-	
-	\begin{figure}[h]
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_wagi_perceptron_unipolar.png}
-	\end{figure}
-	
-	Wyniki są obarczone dużą wiariancją. Dla bardzo małego zbioru treningwego można wywnioskować pewien trend rosnący, jednakże przy większym zbiorze treningowym, zakres initializowanych wag nie wpływa na szybkość uczenia.
-	\newpage
-	\subsubsection{Funkcja aktywacji bipolarna}
-	Wymagana liczba epok do wyuczenia perceptronu prostego dla funkcji aktywacji bipolarnej w zależności od wielkości zbioru uczącego na wykresie 7 poniżej:
-	\begin{figure}[h]
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_date_perceptron_bipolar.png}
-	\end{figure}
-
-Wnioski do tego wykresu są analogiczne do wykresu 1. Jak w przypadku Adaline.\\[0.5cm]
-
-	Wymagana liczba epok do wyuczenia Adaline w zależności od zakresu initializowanych wag na wykresie 8 poniżej:
-	
-	\begin{figure}[h]
-
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_rate_perceptron_bipolar.png}
-		
-	\end{figure}  
-	Uczenie perceptronu nie ma nic wspólnego z algorymem gradientu prostego. Nie ma więc znaczenia jak duża będzie stała uczenia. Wagi będą po prostu przeskalowane.
-		\newpage
-	Wymagana liczba epok do wyuczenia Adaline w zależności od zakresu initializowanych wag na wykresie 9 poniżej:
-	
-	\begin{figure}[h]
-
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{epoki_wagi_perceptron_bipolar.png}
-		
-	\end{figure}   
-	
-	\subsection{Przykładowy wykres błędu w trakcie uczenia}
-	Wykres błędu w zależności od epoki na wykresie 10 poniżej:
-	
-	\begin{figure}[h]
-		\centering
-		\caption{}
-		\includegraphics[width=0.5\textwidth]{adaline_and.png}
-		
-	\end{figure}  
+	W przypadku drugiego rozkładu initializowanych wag uczenie przebiegało szybciej.
 \newpage	
 	\section{Podsumowanie}
 	
-	
-	Na podstawie przeprowadzonych badań w trakcie ćwiczenia zauważono, że w przypadku Adaline krok uczenia ma znaczenie w przeciwieństwie do perceptronu prostego. Dla Adaline wartość kroku uczenia nie może być ani zbyt mała ani zbyt duża. Gdy będzie zbyt mała będzie potrzeba zbyt wielu epok aby wyuczyć model, a w przypadku dużego kroku uczenia mamy do czynienia ze zjawiskiem eksplodującego gradientu. Dla perceptronu prostego stała uczenia nie może być zbyt mała z tego samego powodu, jednakże w przypadku jak będzie ona duża to nie wływa ona na jakość uczenia.\\[0.3cm]
-	
-Dla obydwóch modeli, liczba wymaganych epok maleje wraz z liczbą elementów w zbiorze treningowym.\\[0.3cm]
-	
-Dla obydwóch modeli zakres wartości wag początkowych nie miał większego znaczenia w szybkości uczenia. Jedynie w przypadku bardzo małego zbioru treningowego, można zauważyć pewien trend. Dla bardzo małego zbioru treningowego, potrzebnych jest mniej epok gdy wagi są zbliżone do zera. \\[0.3cm]
-
-Obydwa modele nie radzą sobie z problemami nieseparawoalnymi liniowo.\\[0.3cm]
+	Uczenie sieci neuronowych jest pewną rodzaju sztuką. Można bardzo skrupulatnie dobierać hiperparametry, stosować różne funkcje kosztu, funkcji aktywacji, różnych metod optymalizacji co sprawia, że zadanie jest trudne. Jednakże warto korzystać także z pewnych wzorców i dobrych praktych, które będą działać poprawnie nawet dla naszych nowych problemów. 
 
 
 \end{document}

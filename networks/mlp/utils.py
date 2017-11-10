@@ -22,7 +22,7 @@ def parse_images(path):
             # print(img)
             # print(img.reshape(IMAGE_ROW_SHAPE, order='F'))
 
-            l.append((img.reshape(IMAGE_ROW_SHAPE), get_label_from_filename(filename)))
+            l.append((img.reshape(IMAGE_ROW_SHAPE, order='F'), get_label_from_filename(filename)))
         else:
             print("Shape = {}, index = {}".format(img.shape, filename))
 
@@ -47,15 +47,9 @@ def generate_mini_batches(data, mini_batch):
 def build_data(path):
     images = np.load(path)
     np.random.shuffle(images)
-    train = 1444
-    validation = 1644
+    train = 1600
+    validation = 1500
     return images[:train], images[train:], images[train:]
-
-import Augmentor
-p = Augmentor.Pipeline(DIRECTORY)
-p.rotate(0.7, 10, 10)
-
-g = p.keras_generator(batch_size=128)
 
 # images = parse_images(DIRECTORY)
 # print(images[0][0])

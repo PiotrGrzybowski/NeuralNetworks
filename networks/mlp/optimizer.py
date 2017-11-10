@@ -19,6 +19,7 @@ class Optimizer:
 
     def train(self, network, training_data, validation_data, test_data):
         for epoch in range(self.epochs):
+            print("Epoch: {}".format(epoch))
             shuffle(training_data)
 
             for mini_batch in generate_mini_batches(training_data, self.batch_size):
@@ -70,7 +71,7 @@ class Optimizer:
 
         if test_data is not None:
             print("Cost = {}".format(epoch, self.epoch_stats[-1].test_cost))
-            print("Accuracy: {} / {}\n".format(int(1.3 * self.epoch_stats[-1].test_accuracy), len(test_data)))
+            print("Accuracy: {} / {}\n".format(int(self.epoch_stats[-1].test_accuracy), len(test_data)))
         print()
 
 
