@@ -19,7 +19,7 @@ def predict_directory(network, data):
         s += network.correct_prediction
     print("Correct = {}".format(s))
 
-path = '/home/piotr/Workspace/MachineLearning/NeuralNetworks/networks/mlp/images.npy'
+path = 'images.npy'
 training_data, validation_data, test_data = build_data(path)
 initializer = GaussianNormalScaled()
 activation = sigmoid
@@ -29,25 +29,18 @@ dense_1 = Dense(input_layer, 64, activation, initializer)
 output_layer = Output(dense_1, 10, activation, initializer)
 
 network = Network([input_layer, dense_1, output_layer])
-
+optimizer = GradientDescent(8, 1.3, MeanSquaredError, 1, True)
+optimizer.train(network, training_data, validation_data, None)
 #
-# print(network.layers[1].weights.shape)
-# print(network.layers[1].biases.shape)
-# print(network.layers[2].weights.shape)
-# print(network.layers[2].biases.shape)
-# optimizer = GradientDescent(7, 1.3, MeanSquaredError, 1, True)
-# optimizer.train(network, training_data, validation_data, None)
+# np.save('www1.npy', network.layers[1].weights)
+# np.save('www2.npy', network.layers[2].weights)
+#
+# np.save('bbb1.npy', network.layers[1].biases)
+# np.save('bbb2.npy', network.layers[2].biases)
 
-network.layers[1].weights = np.load('w1.npy').T
-network.layers[1].biases = np.expand_dims(np.load('b1.npy'), axis=1)
-network.layers[2].weights = np.load('w2.npy').T
-network.layers[2].biases = np.expand_dims(np.load('b2.npy'), axis=1)
+network.layers[1].weights = np.load('www1.npy')
+network.layers[1].biases = np.load('bbb1.npy')
+network.layers[2].weights = np.load('www2.npy')
+network.layers[2].biases = np.load('bbb2.npy')
 
-# print()
-# print()
-# print(np.load('w1.npy').T.shape)
-# print(network.layers[1].weights.shape)
-# print(network.layers[1].biases.shape)
-# print(network.layers[2].weights.shape)
-# print(network.layers[2].biases.shape)
-predict_directory(network, np.load('/home/piotr/Workspace/MachineLearning/NeuralNetworks/networks/images_0.npy'))
+predict_directory(network, np.load('/Users/Piotr/Workspace/NeuralNetworks/networks/images_2.npy'))

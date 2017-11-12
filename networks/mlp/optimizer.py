@@ -26,8 +26,7 @@ class Optimizer:
                 network.load_batch(mini_batch)
                 network.propagate_forward()
                 biases_error, weights_error = self.mini_batch_error(*network.propagate_backward(self.loss_function))
-                reg = (self.learning_rate * self.lmbda / float(len(training_data)))
-                network.update_weights(self.calculate_gradient(weights_error), reg)
+                network.update_weights(self.calculate_gradient(weights_error))
                 network.update_biases(self.calculate_gradient(biases_error))
 
             self.epoch_stats.append(self.calculate_epoch_stats(network, training_data, validation_data, test_data))
@@ -87,7 +86,6 @@ class MomentumGradientDescent(GradientDescent):
         self.previous_gradient = None
 
     def calculate_gradient(self, error):
-        return super().calculate_gradient(error)
         if self.previous_gradient is None:
             self.previous_gradient = super().calculate_gradient(error)
             return self.previous_gradient

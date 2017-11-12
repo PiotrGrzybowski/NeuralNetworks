@@ -148,9 +148,9 @@ class Network:
 
         return loss_function.calculate_cost(self.last_layer.expected_value, self.last_layer.outputs)
 
-    def update_weights(self, weights_gradient, reg):
+    def update_weights(self, weights_gradient):
         for layer, gradient in zip(self.reversed_layers, weights_gradient):
-            layer.weights = layer.weights - gradient - reg * layer.weights
+            layer.weights = layer.weights - gradient
 
     def update_biases(self, biases_gradient):
         for layer, gradient in zip(self.reversed_layers, biases_gradient):

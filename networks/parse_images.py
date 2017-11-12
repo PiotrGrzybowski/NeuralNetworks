@@ -6,7 +6,7 @@ from sklearn import preprocessing
 lb = preprocessing.LabelBinarizer()
 lb.fit(range(10))
 
-DIRECTORY = '/home/piotr/Workspace/MachineLearning/NeuralNetworks/data/gr1/0/'
+DIRECTORY = '/Users/Piotr/Workspace/NeuralNetworks/data/gr2/2/'
 IMAGE_ROW_SHAPE = (70,)
 
 
@@ -53,4 +53,4 @@ for x, y in zip(train_x, ty):
     training_data.append(((np.expand_dims(x, axis=1)), np.expand_dims(y, axis=1)))
 
 print(len(training_data))
-np.save('images_0.npy', training_data)
+np.save('images_2.npy', training_data)
