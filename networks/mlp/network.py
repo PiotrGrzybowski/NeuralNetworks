@@ -137,7 +137,7 @@ class Network:
         weights_error = []
 
         for layer in self.reversed_layers:
-            biases_error.append(layer.calculate_error(loss_function))
+            biases_error.append(layer.propagate_backward(loss_function))
             weights_error.append(np.dot(biases_error[-1], layer.input.T))
 
         return biases_error, weights_error
