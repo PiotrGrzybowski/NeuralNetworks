@@ -159,16 +159,16 @@ class TestMlp(unittest.TestCase):
         l2 = 0.0001
 
         mlp.train(data, learning_rate, epochs, batch_size, l2)
-    #
-    # def test_train_batch_sample(self):
-    #     mlp = Network(32)
-    #     data = np.random.rand(784, 200)
-    #     batch_size = 32
-    #     learning_rate = 0.01
-    #     epochs = 10
-    #     l2 = 0.0001
-    #
-    #     mlp.train(data, learning_rate, epochs, batch_size, l2)
+
+    def test_train_batch_sample(self):
+        mlp = Network(32)
+        data = np.random.rand(784, 200)
+        batch_size = 10
+        learning_rate = 0.01
+        epochs = 10
+        l2 = 0.0001
+
+        mlp.train(data, learning_rate, epochs, batch_size, l2)
 
 
 if __name__ == '__main__':

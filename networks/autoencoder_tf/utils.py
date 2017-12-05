@@ -5,7 +5,7 @@ import numpy as np
 
 
 def sigmoid_derivative(x):
-    return (1 - tf.sigmoid(x)) * tf.sigmoid(x)
+    return tf.multiply(tf.sigmoid(x), tf.subtract(tf.constant(1.0), tf.sigmoid(x)))
 
 
 def batch_generator(data, batch_size):
@@ -22,8 +22,8 @@ def shuffle_data(data):
 class MeanSquaredError:
     @staticmethod
     def calculate_cost(expected, outputs):
-        return 0.5 * tf.pow(tf.norm(expected - outputs), 2)
+        return tf.multiply(tf.constant(0.5), tf.pow(tf.norm(expected - outputs), 2))
 
     @staticmethod
     def calculate_cost_gradient(expected, outputs):
-        return outputs - expected
+        return tf.subtract(outputs, expected)

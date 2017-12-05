@@ -34,10 +34,17 @@ class Network:
         self.output_bias_gradient = tf.expand_dims(tf.reduce_sum(self.output_error, axis=1), axis=1)
         self.hidden_bias_gradient = tf.expand_dims(tf.reduce_sum(self.hidden_error, axis=1), axis=1)
 
-    def train(self, training_data, learning_rate, epochs, batch_size, l2, test_data=None):
+    def train(self, training_data, eta, epochs, batch_size, l2, test_data=None):
         for epoch in range(epochs):
             training_data = shuffle_data(training_data)
             print("Epoch: {}".format(epoch))
 
-            for batch in batch_generator(training_data, batch_size):
-                print(batch.shape)
+            init = tf.global_variables_initializer()
+            with tf.Session() as sess:
+                sess.run(init)
+                for batch in batch_generator(training_data, batch_size):
+                    step = [tf.assign(self.output_weights, tf.subtract(
+                        tf.multiply(tf.subtract(tf.constant(1.0), tf.multiply(eta, l2)), self.output_weights),
+                        tf.multiply(tf.div(eta, batch_size), self.output_weights_gradient)))]
+
+                    sess.run(step, feed_dict={self.input: batch})
