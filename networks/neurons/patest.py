@@ -1,17 +1,14 @@
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 
-import yaml
 import numpy as np
-from neurons.config import generate_data_set_from_config, generate_neuron_from_config, generate_optimizer_from_config
 
-with open("configs/adaline_and.yml", 'r') as yml_file:
-    config = yaml.load(yml_file)
-
-training_set_config = config['data_set']['training_data']
-validation_set_config = config['data_set']['validation_data']
-neuron_config = config['neuron']
-optimizer_config = config['optimizer']
+# with open("configs/adaline_and.yml", 'r') as yml_file:
+#     config = yaml.load(yml_file)
+#
+# training_set_config = config['data_set']['training_data']
+# validation_set_config = config['data_set']['validation_data']
+# neuron_config = config['neuron']
+# optimizer_config = config['optimizer']
 
 #####Required number of epochs, depends on training examples#########
 # training_samples = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 50]
@@ -126,26 +123,26 @@ optimizer_config = config['optimizer']
 
 
 # # plt.show()
-samples = 1
-epochs = optimizer_config['epochs']
-traines = np.zeros((samples, epochs))
-validates = np.zeros((samples, epochs))
-
-for i in range(samples):
-    training_data = generate_data_set_from_config(training_set_config)
-    validation_data = generate_data_set_from_config(validation_set_config)
-    neuron = generate_neuron_from_config(neuron_config)
-    optimizer = generate_optimizer_from_config(optimizer_config)
-
-    trains, validate, epoch = optimizer.train(neuron, training_data, validation_data, config['visualize'])
-
-    traines[i, :] = trains
-    validates[i, :] = validate
-
-print(neuron.weights)
-print(neuron.bias)
-
-
+# samples = 1
+# epochs = optimizer_config['epochs']
+# traines = np.zeros((samples, epochs))
+# validates = np.zeros((samples, epochs))
+#
+# for i in range(samples):
+#     training_data = generate_data_set_from_config(training_set_config)
+#     validation_data = generate_data_set_from_config(validation_set_config)
+#     neuron = generate_neuron_from_config(neuron_config)
+#     optimizer = generate_optimizer_from_config(optimizer_config)
+#
+#     trains, validate, epoch = optimizer.train(neuron, training_data, validation_data, config['visualize'])
+#
+#     traines[i, :] = trains
+#     validates[i, :] = validate
+#
+# print(neuron.weights)
+# print(neuron.bias)
+#
+#
 
 
 
@@ -160,10 +157,16 @@ print(neuron.bias)
 # print(stds_trains.shape)
 # print(means_trains.shape)
 # print(epochs.shape)
-# fig, ax0 = plt.subplots(nrows=1, sharex=True)
-# ax0.errorbar(epochs, means_trains, yerr=stds_trains, fmt='-o', color='green')
-# ax0.errorbar(epochs, means_validates, yerr=stds_validates, fmt='-o', color='red')
-# ax0.set_title('Error depends by epoch. Adaline neuron.')
+fig, ax0 = plt.subplots(nrows=1, sharex=True)
+ax0.errorbar(np.arange(0, 7), [0.12, 0.07, 0.09, 0.14, 0.08, 0.04, 0.01],
+             yerr=[0.01, 0.03, 0.02, 0.05, 0.01, 0.09, 0.02], fmt='-o', color='green', label='Treningowy')
+ax0.errorbar(np.arange(0, 7), [23.43, 18.82, 14.36, 11.98, 7.87, 5.43, 4.24],
+             yerr=[3.13, 3.13, 4.21, 2.65, 1.59, 1.21, 1.42], fmt='-o', color='red', label='TESTOWY')
+ax0.set_title('Wartość funkcji kosztu w zależności od liczności zbioru treningowego')
+plt.ylabel('Koszt')
+plt.xlabel('Wielkość zbioru treningowego')
+plt.legend()
+# plt.axes().get_xaxis().set_visible(False)
 #
 #
 # red_patch = mpatches.Patch(color='red', label='Training data error')
@@ -176,14 +179,14 @@ print(neuron.bias)
 #     plt.plot(np.arange(0, len(trains)), validate, color='red')
 #     plt.show()
 #
-plt.xlim((-4.1, 4.1))
-plt.ylim((-4.1, 4.1))
-
-for sample in validation_data:
-    result = neuron.predict(sample)
-    if result == 1:
-        plt.plot(sample[0], sample[1], 'or')
-    else:
-        plt.plot(sample[0], sample[1], 'ob')
-
+# plt.xlim((-4.1, 4.1))
+# plt.ylim((-4.1, 4.1))
+#
+# for sample in validation_data:
+#     result = neuron.predict(sample)
+#     if result == 1:
+#         plt.plot(sample[0], sample[1], 'or')
+#     else:
+#         plt.plot(sample[0], sample[1], 'ob')
+#
 plt.show()

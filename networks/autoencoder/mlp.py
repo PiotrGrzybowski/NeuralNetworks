@@ -1,7 +1,8 @@
+from random import shuffle
+
 import numpy as np
 
 from autoencoder.activation_functions import sigmoid, sigmoid_derivative
-from random import shuffle
 
 
 class MeanSquaredError:
@@ -17,6 +18,7 @@ class MeanSquaredError:
 class Network:
     def __init__(self, hidden):
         self.input = None
+        self.drop = 0
         self.hidden_weights = np.random.randn(hidden, 784) / np.sqrt(784)
         self.output_weights = np.random.randn(784, hidden) / np.sqrt(hidden)
 
@@ -43,13 +45,23 @@ class Network:
 
         self.loss_function = MeanSquaredError()
 
+        self.train_cost = []
+        self.test_cost = []
+
     def load_input(self, data):
         self.input = data
+
+    def dropout(self):
+        drop = np.random.choice([0, 1], self.hidden_net.shape, p=[self.drop, 1 - self.drop])
+        self.hidden_activation *= drop
+        self.hidden_activation_derivative *= drop
 
     def feed_forward(self):
         self.hidden_net = np.dot(self.hidden_weights, self.input)
         self.hidden_activation = sigmoid(self.hidden_net)
         self.hidden_activation_derivative = sigmoid_derivative(self.hidden_net)
+        self.dropout()
+
         self.output_net = np.dot(self.output_weights, self.hidden_activation)
         self.output_activation = sigmoid(self.output_net)
         self.output_activation_derivative = sigmoid_derivative(self.output_net)
@@ -87,8 +99,11 @@ class Network:
                 self.calculate_parameters_gradients()
                 self.update_parameters(learning_rate, batch_size, l2)
 
-            print("  Training cost = {}".format(self.calculate_cost(training_data, l2)))
-            print("  Test     cost = {}".format(self.calculate_cost(test_data, l2)))
+            self.train_cost.append(self.calculate_cost(training_data, l2))
+            self.test_cost.append(self.calculate_cost(test_data, l2))
+
+            print("  Training cost = {}".format(self.train_cost[-1]))
+            print("  Test     cost = {}".format(self.test_cost[-1]))
 
     def calculate_cost(self, data, l2):
         self.load_input(data)
