@@ -171,5 +171,6 @@ class TestMlp(unittest.TestCase):
         # mlp.train(data, learning_rate, epochs, batch_size, l2)
 
 
+
 if __name__ == '__main__':
     unittest.main()
